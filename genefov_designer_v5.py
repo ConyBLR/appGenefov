@@ -23,8 +23,9 @@ def resource_path(relative_path):
     try:
         # PyInstaller crea una carpeta temporal y almacena el nombre del ejecutable en _MEIPASS
         base_path = sys._MEIPASS
-    except Exception:
+    except AttributeError:
         base_path = os.path.abspath(".")
+        print(f"base:{base_path}")
 
     return os.path.join(base_path, relative_path)
 
@@ -399,7 +400,7 @@ class Ui_MainWindow(object):
 
         def retranslateUi(self, MainWindow):
                 _translate = QtCore.QCoreApplication.translate
-                MainWindow.setWindowTitle(_translate("MainWindow", "GENEFOV (0.3.0)"))
+                MainWindow.setWindowTitle(_translate("MainWindow", "GENEFOV (0.2.0)"))
                 self.groupBox_Sitios.setTitle(_translate("MainWindow", "Sitios Disponibles"))
                 self.comboBox_Sitios.setItemText(0, _translate("MainWindow", "Salta"))
                 self.comboBox_Sitios.setItemText(1, _translate("MainWindow", "El Rosal"))
@@ -450,90 +451,11 @@ class Ui_MainWindow(object):
                 self.label_35.setText(_translate("MainWindow", "[ kWh ]"))
                 self.label_34.setText(_translate("MainWindow", "[ kWh ]"))
                 self.pushButton_exportar.setText(_translate("MainWindow", "Exportar"))
-                self.label_footer.setText(_translate("MainWindow", "Grupo de Estudio y Evaluacion del Recurso Solar - INENCO (UNSA-CONICET)"))
-
-
-
-
-        '''def calcular_generacion(self):
-                self.sitio_seleccionado = self.comboBox_Sitios.currentText()
-                valores_por_sitio = {
-                        'Salta': {'latitud': -24, 'longitud': -65, 'altura': 1233, 'gtm': 0, 'cvptm': -0.36, 'PST': 450},
-                        'ero': {'latitud': -30, 'longitud': -70, 'altura': 1500, 'gtm': 0, 'cvptm': -0.4, 'PST': 500},
-                        'yu': {'latitud': -20, 'longitud': -60, 'altura': 1100, 'gtm': 0, 'cvptm': -0.35, 'PST': 400},
-                }
-
-                parametros_sitio = valores_por_sitio.get(self.sitio_seleccionado, {})
-
-                    # Asignar los valores a los atributos de la clase
-                self.latitud = parametros_sitio.get('latitud', 0)
-                self.longitud = parametros_sitio.get('longitud', 0)
-                self.altura = parametros_sitio.get('altura', 0)
-
-                # Verificar si el archivo CSV existe
-                archivo_csv = f"{self.sitio_seleccionado}.csv"  # Asumiendo que el archivo se llama igual que el sitio
-                if not os.path.exists(archivo_csv):
-                        # Mostrar un mensaje de advertencia si el archivo no se encuentra
-                        QMessageBox.warning(self.centralwidget, "Archivo no encontrado", f"No se encontró el archivo necesario: {archivo_csv}")
-                        return  # Salir de la función si el archivo no existe
-
-                # Obtener los valores de los QLineEdit y aplicar valores por defecto si el campo está vacío o no es válido
-                try:
-                        self.orientacion = float(self.lineEdit.text()) if self.lineEdit.text() else 180
-                except ValueError:
-                        self.orientacion = 180
-
-                try:
-                        self.inclinacion = float(self.lineEdit_2.text()) if self.lineEdit_2.text() else 24
-                except ValueError:
-                        self.inclinacion = 24  # Valor por defecto si no se puede convertir
-
-                try:
-                        self.K_temp = float(self.lineEdit_3.text()) if self.lineEdit_3.text() else 0.029
-                except ValueError:
-                        self.K_temp = 0.029
-
-                try:
-                        self.albedo = float(self.lineEdit_6.text()) if self.lineEdit_6.text() else 0.2
-                except ValueError:
-                        self.albedo = 0.2
-
-                try:
-                        self.area_paneles = float(self.lineEdit_8.text()) if self.lineEdit_8.text() else 2.21
-                except ValueError:
-                        self.area_paneles = 2.21
-
-                # Crear una instancia de Genefov
-                
-                genefov = Genefov(
-                        parametros_sitio['latitud'], parametros_sitio['longitud'], parametros_sitio['altura'], parametros_sitio['gtm'],
-                        self.orientacion,  self.inclinacion, self.K_temp,  parametros_sitio['PST'], parametros_sitio['cvptm'],
-                        self.albedo, self.area_paneles, self.sitio_seleccionado
-                )
-
-                # Obtener los resultados
-                self.dias, self.vec_suma, total, s = genefov.horario
-                print(sitio_seleccionado)
-                print(parametros_sitio['latitud'])
-                print(parametros_sitio['longitud'])
-                print(parametros_sitio['altura'])
-                print(parametros_sitio['gtm'])
-                print(f'orientacion: {orientacion}')
-                print(f'inclinacion: {inclinacion}')
-                print(K_temp)
-                print(parametros_sitio['PST'])
-                print(parametros_sitio['cvptm'])
-                print(albedo)
-                print(area_paneles)
-                print(s)
-
-                # Mostrar los resultados
-                self.textEdit_5.setText(str(round(total,1)))
-                self.plotOnCanvas(self.dias, self.vec_suma)'''
-                
+                self.label_footer.setText(_translate("MainWindow", "Grupo de Estudio y Evaluacion del Recurso Solar - INENCO (UNSA-CONICET)"))            
 
         def calcular_generacion(self):
                 self.sitio_seleccionado = self.comboBox_Sitios.currentText()
+                print(f"sitio: {self.sitio_seleccionado}")
                 valores_por_sitio = {
                         'Salta': {'latitud': -24, 'longitud': -65, 'altura': 1233, 'gtm': 0, 'cvptm': -0.36, 'PST': 450},
                         'ero': {'latitud': -30, 'longitud': -70, 'altura': 1500, 'gtm': 0, 'cvptm': -0.4, 'PST': 500},
@@ -541,14 +463,14 @@ class Ui_MainWindow(object):
                 }
                 
                 parametros_sitio = valores_por_sitio.get(self.sitio_seleccionado, {})
-
                 # Asignar los valores a los atributos de la clase
                 self.latitud = parametros_sitio.get('latitud', 0)
                 self.longitud = parametros_sitio.get('longitud', 0)
                 self.altura = parametros_sitio.get('altura', 0)
 
                 # Verificar si el archivo CSV existe
-                archivo_csv = resource_path(f"datos/Salta")  # Usar resource_path para obtener la ruta correcta
+                archivo_csv = resource_path(f"sitios\\{self.sitio_seleccionado}.csv")  # Usar resource_path para obtener la ruta correcta
+                print(f" archivo csv: {archivo_csv}")
                 if not os.path.exists(archivo_csv):
                         # Mostrar un mensaje de advertencia si el archivo no se encuentra
                         QMessageBox.warning(self.centralwidget, "Archivo no encontrado", "No se encontró el archivo necesario")

@@ -10,6 +10,7 @@ import math
 import pandas as pd
 import numpy as np
 import pylab as plt
+import os, sys
 class Genefov:
     
     def __init__(self, lat, lon, alt, gmt, orientacion, beta, ktemp, PST, cvptm, albedo, area, estacion):
@@ -32,7 +33,7 @@ class Genefov:
         self.df = pd.DataFrame()
         self.estacion = estacion
         #self.df2 = pd.read_csv(f"{self.estacion}.csv", header=2) #separado por coma
-        self.df2 = pd.read_csv(f"D:\GEERS\On_2024\env_trabajo\GeneFov\ModulosGeneFov\designer\VerionesGeneFov\v0.4.0\para_exe\Salta.csv", header=2) #separado por coma
+        self.df2 = pd.read_csv(self.resource_path(f"sitios/{self.estacion}.csv"), header=2) #separado por coma
         self.df["Y"] = self.df2["Year"]
         self.df["M"] = self.df2["Month"]
         self.df["D"] = self.df2["Day"]
@@ -70,7 +71,15 @@ class Genefov:
         self.df["Tpanel"] = list(map(self.gettpanel, self.df["Icoll"],self.df["Temp"]))
        # self.diario = list(map(self.diario, np.array(self.df["Tpanel"].apply(np.array))))
         self.horario = self.horario(np.array(self.df["Tpanel"]))
-
+    def resource_path(self, relative_path):
+        """Obtiene la ruta absoluta, manejando el entorno PyInstaller si es necesario."""
+        try:
+            # Cuando se empaqueta con PyInstaller, los archivos se extraen en una carpeta temporal
+            base_path = sys._MEIPASS
+        except AttributeError:
+            # Si no está empaquetado, usar la ruta normal
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
 
     #Calculo de CSZ
     
