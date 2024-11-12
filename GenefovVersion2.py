@@ -243,7 +243,7 @@ class Genefov:
         dias = df.dias
         mask1 = ((dias < 172) & (80 <= dias))
         mask2 = ((172 <= dias) & (dias < 263))
-        mask3 = ((263 <= dias) & (dias < 365))
+        mask3 = ((263 <= dias) & (dias < 355))
         mask4 = ((dias < 80))
         mask5 = (355 <= dias)
         #df = df.set_index("dias")
