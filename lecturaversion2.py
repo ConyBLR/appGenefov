@@ -9,7 +9,7 @@ Created on Wed Aug 28 15:11:09 2024
 from Genefov import Genefov
 
 
-g = Genefov(-24.7288, -65.4095, 1120,0, 180, 0, 0.029, 360, -0.36, 0.3, 2.21,2, 'datosSLA10') #Lat, Long, Alt, gmt, Orientacion, Beta, k_temp, Pf_STC, Coef var pot temp mod, albedo, area, cantidad de paneles       
+g = Genefov(-24.7288, -65.4095, 1233,0, 180, 24, 0.029, 450, -0.36, 0.2, 2.21,1, 'datosSLA30') #Lat, Long, Alt (m), UTC, Orientacion (°), Beta, k_temp, Pf_STC (W), Coef var pot temp mod, albedo, area (m2), cantidad de paneles       
 
 df = g.df # DataFrame
 dias, diaria, total, k = g.diaria3 #Numero de dias;Energiadiaria Wh/m2 ;total producido kWh/m2; k: plotea
