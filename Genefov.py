@@ -27,7 +27,6 @@ class Genefov:
         self.PST = PST
         self.albedo = albedo
         self.area = area
-        #self.df2 = df2 
         self.cant = cant
         self.df = pd.DataFrame()
         self.estacion = estacion
@@ -36,12 +35,9 @@ class Genefov:
         self.df["M"] = self.df2["Month"]
         self.df["D"] = self.df2["Day"]
         
-        
         self.df['fecha'] = pd.to_datetime(self.df[["Y","M","D"]].rename(columns={'Y':'year',"M":"month","D":"day"}))
         self.df["J"] = self.df['fecha'].dt.dayofyear
         
-        
-
         T = self.df2["Minute"]
         self.dt = abs(T[2] - T[1])
         self.df["GHI"] = self.df2["GHI"]
@@ -61,14 +57,12 @@ class Genefov:
         
         self.df['w'] = 15 * (12 - self.df['HS'])    
         self.df['wRad'] = self.df['w'].apply(math.radians)
-
         
         self.df["Ws"] = list(map(self.getWs, self.df["Declinacion"]))    
         self.df["CSZ"] = list(map(self.getCTZ, self.df["Declinacion"], self.df["wRad"]))
         self.df["CSTita"] = list(map(self.getCTita, self.df["Declinacion"], self.df["wRad"]))
         self.df["Icoll"] = list(map(self.getIcoll, self.df["CSTita"],self.df["GHI"], self.df["DNI"],self.df["DHI"] ))
         self.df["Tpanel"] = list(map(self.gettpanel, self.df["Icoll"],self.df["Temp"]))
-       # self.diario = list(map(self.diario, np.array(self.df["Tpanel"].apply(np.array))))
         self.diaria3 = self.diaria(np.array(self.df["Tpanel"]),self.cant)
         self.clausura = self.clausuratotal(self.df["GHI"], self.df["DNI"], self.df["DHI"],self.df["Temp"],self.df["CSTita"])
         self.dias, self.diaria, total, k = self.diaria3
@@ -90,14 +84,11 @@ class Genefov:
             return 0.7570 + 1.0112 * 10**-5 * self.alt ** 1.1067
     
     def getE(self,n,y):
-        
-        
        
         if(y%4) == 0:
             gamma = 2 * np.pi * (n-1)/366
         else:
             gamma = 2 * np.pi * (n-1)/365
-        
         
         cosg = np.cos(gamma) 
         sing = np.sin(gamma)
@@ -122,9 +113,6 @@ class Genefov:
     #Hora solar 
     #devuelve valor hora solar
     #recorre cada fila del df
-
-    
-  
     
     #Declinación solar
     #dado dia ordinal
@@ -141,22 +129,10 @@ class Genefov:
             
     def getWs(self, delta):
         return math.acos(-math.tan(delta) * (math.tan(math.radians(self.lat))))
-    
-    
-    
-    
-    
-    
-    
-    
-    #CTZ
-    #dado decliancio, lat y angulo horario
-    #devuelve cos tita z en radianes
+   
     def getCTZ(self, delta, omega):
         latR = math.radians(self.lat)    
         return (math.cos(latR) * math.cos(delta)* math.cos(omega)) + (math.sin(latR)*math.sin(delta))
-        #return math.sin(delta) * math.sin(math.radians(lat)) + math.cos(delta) * math.cos(math.radians(lat))* math.cos(omega)
-
     def getCTita(self, delta, omega):
         latR = np.radians(self.lat)
         inclinacion = np.radians(self.beta)
@@ -164,22 +140,16 @@ class Genefov:
         return np.sin(delta) * np.sin(latR)* np.cos(inclinacion) - np.sin(delta) * np.cos(latR) * np.sin(inclinacion) * np.cos(orien) + np.cos(delta) * np.cos(latR) * np.cos(inclinacion) * np.cos(omega) + np.cos(delta) * np.sin(latR) * np.sin(inclinacion) * np.cos(orien) * np.cos(omega) + np.cos(delta) * np.sin(inclinacion) * np.sin(orien) * np.sin(omega)                       
 
     def getIcoll(self, CTita, ghi, dni, dhi):
-        #ghi = self.df2["GHI"]
-        #dni = self.df["DNI"]
-        #dhi = self.df["DHI"]
         albedo = self.albedo
         inclinacion = np.radians(self.beta)
-        #if CTita > 0 and CTZ > 0:
         Icoll = np.where(CTita >0, CTita * dni + dhi * ((1 + np.cos(inclinacion))/2) + albedo * ghi * ((1 - np.cos(inclinacion))/2), 0)
                
         return Icoll
         
     def gettpanel(self, Icoll, temperatura):
-        #temperatura = self.df["Temp"]
         ktemp = self.ktemp
         PST = self.PST
         cvptm = self.cvptm
-        area = self.area
         dt = self.dt
         tpanel = Icoll * ktemp + temperatura
         pele = PST * (Icoll/1000) * (1 + (cvptm/100) * (tpanel -25))
@@ -188,14 +158,12 @@ class Genefov:
         else: 
             Energia = pele
         
-        return Energia/area
+        return Energia
     
     def diaria(self, Tpanel,cant):
         dias = []
         cant = cant
-       # s = Tpanel
         dt = self.dt
-    #    h = len(s)
         if dt != 0:
             desp = 60/dt
         else:
@@ -203,15 +171,11 @@ class Genefov:
         hasta = int(desp*24)
         vec = Tpanel.reshape(-1, hasta)
         vec_suma = vec.sum(axis = 1)
-
         dias = np.linspace(1,365,365)
-
-       
-
+  
         total = cant*vec_suma.sum()/1000
      
-        return dias, cant*vec_suma, total, plt.plot(dias, cant*vec_suma)
-        #return hasta, vec, dt
+        return dias, cant*vec_suma/1000, total, plt.plot(dias, cant*vec_suma)
     
     def grafica(self, horario, dias):
         return plt.plot(dias, horario)
@@ -220,31 +184,31 @@ class Genefov:
         GHI=ghi
         DNI=dni
         DHI=dhi
-        #cant= cant
+        dt = self.dt
         CSZ = csz
         temp = temp
-        GHItotal = GHI.sum()
-        DNItotal = DNI.sum()
-        DHItotal = DHI.sum()
-        Temprom = temp.mean()
-        DNIhorizon = DNI * CSZ
-        return GHItotal, DNItotal, DNIhorizon, DHItotal, Temprom
+        if dt == 0:
+            desp = 1
+        else:
+            desp = dt/60
+        GHItotal = GHI.sum() * desp
+        DNItotal = DNI.sum() * desp
+        DHItotal = DHI.sum() * desp
+        DNIhorizon = DNI * CSZ * desp 
+        Temprom = temp.mean()     
+        return GHItotal/1000, DNItotal/1000, DNIhorizon/1000, DHItotal/1000, Temprom
     
     def estacional(self,dias,total,cant):
         total = np.array(total)
         cant = cant
         dias = np.array(dias)
         df = pd.DataFrame({"dias":dias,"ghi":total})
-        #df.index.name = "dias"
-        #df = df.rename(columns= {0:"GHI"})
-        #total = df.total
         dias = df.dias
         mask1 = ((dias < 172) & (80 <= dias))
         mask2 = ((172 <= dias) & (dias < 263))
         mask3 = ((263 <= dias) & (dias < 355))
         mask4 = ((dias < 80))
         mask5 = (355 <= dias)
-        #df = df.set_index("dias")
         ghi = df.ghi
         otono = ghi[mask1]
         invierno = ghi[mask2]
