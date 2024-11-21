@@ -3,7 +3,7 @@
 """
 Created on Wed Aug 28 14:16:30 2024
 
-@author: nicolas
+@author: Nicolas Rivera
 """
 
 import math
@@ -43,10 +43,11 @@ class Genefov:
         
 
         T = self.df2["Minute"]
-        self.dt = T[2] - T[1]
+        self.dt = abs(T[2] - T[1])
         self.df["GHI"] = self.df2["GHI"]
         self.df["DNI"] = self.df2["DNI"]
         self.df["DHI"] = self.df2["DHI"]
+        self.df["GHIcc"] = self.df2["Clearsky GHI"]
         self.df["Temp"] = self.df2["Temperature"]
         self.df["E"] = list(map(self.getE, self.df.J, self.df.Y))
         self.df["H"] = self.df2['Hour']
@@ -121,11 +122,7 @@ class Genefov:
     #Hora solar 
     #devuelve valor hora solar
     #recorre cada fila del df
-    def getHS(self):
-        A = 1
-        if self.gmt<=0:
-            A = -1
-        return self.df['Hdec'] + (4 * ((A * 15 * self.gmt)- (A*self.lon))+ self.df['E'])/60
+
     
   
     
@@ -203,8 +200,8 @@ class Genefov:
             desp = 60/dt
         else:
             desp = 1
-
-        vec = Tpanel.reshape(-1, 24)
+        hasta = int(desp*24)
+        vec = Tpanel.reshape(-1, hasta)
         vec_suma = vec.sum(axis = 1)
 
         dias = np.linspace(1,365,365)
@@ -214,7 +211,8 @@ class Genefov:
         total = cant*vec_suma.sum()/1000
      
         return dias, cant*vec_suma, total, plt.plot(dias, cant*vec_suma)
-        
+        #return hasta, vec, dt
+    
     def grafica(self, horario, dias):
         return plt.plot(dias, horario)
     
@@ -253,7 +251,6 @@ class Genefov:
         primavera = ghi[mask3]
         verano = ghi[mask4 | mask5]
         return cant*otono.sum(), cant*invierno.sum(), cant*primavera.sum(), cant*verano.sum()
-       
+
         
-    
         
