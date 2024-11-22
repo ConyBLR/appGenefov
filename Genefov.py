@@ -65,7 +65,7 @@ class Genefov:
         self.df["Tpanel"] = list(map(self.gettpanel, self.df["Icoll"],self.df["Temp"]))
         self.diaria3 = self.diaria(np.array(self.df["Tpanel"]),self.cant)
         self.clausura = self.clausuratotal(self.df["GHI"], self.df["DNI"], self.df["DHI"],self.df["Temp"],self.df["CSTita"])
-        self.dias, self.diaria, total, k = self.diaria3
+        self.dias, self.diaria, total = self.diaria3
         self.Iestacional = self.estacional(self.dias, self.diaria,self.cant)
 
     #Calculo de CSZ
@@ -174,9 +174,10 @@ class Genefov:
         dias = np.linspace(1,365,365)
   
         total = cant*vec_suma.sum()/1000
-     
-        return dias, cant*vec_suma/1000, total, plt.plot(dias, cant*vec_suma)
-    
+        
+
+        
+        return dias, cant*vec_suma/1000, total    
     def grafica(self, horario, dias):
         return plt.plot(dias, horario)
     
