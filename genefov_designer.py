@@ -484,7 +484,7 @@ class Ui_MainWindow(object):
                         # Mostrar un mensaje de advertencia si el archivo no se encuentra
                         QMessageBox.warning(self.centralwidget, "Archivo no encontrado", "No se encontró el archivo necesario")
                         return  # Salir de la función si el archivo no existe
-                #archivo_csv = resource_path(f"datos/Salta")  # Usar resource_path para obtener la ruta correcta
+
                 # Obtener los valores de los QLineEdit y aplicar valores por defecto si el campo está vacío o no es válido
 
                     # Validación de parámetros con rangos
@@ -540,17 +540,6 @@ class Ui_MainWindow(object):
                 self.textEdit_7.setText(str(round(verano, 1)))
                 
                 self.plotOnCanvas(self.dias, self.vec_suma)
-        '''
-        def plotOnCanvas(self, dias, vec_suma):
-                # Limpiar el canvas antes de graficar
-                self.figure.clear()
-                ax = self.canvas.figure.add_subplot(111)
-                ax.plot(dias, vec_suma)
-                ax.set_title('Generación Fotovoltaica')
-                ax.set_xlabel('Días')
-                ax.set_ylabel('Generación (kWh)')
-                ax.grid()
-                self.canvas.draw()'''
         
         def plotOnCanvas(self, dias, vec_suma):
                 # Límites de las estaciones en el hemisferio sur con colores correspondientes
