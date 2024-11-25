@@ -10,6 +10,7 @@ import math
 import pandas as pd
 import numpy as np
 import pylab as plt
+import sys, os
 class Genefov:
     
     def __init__(self, lat, lon, alt, gmt, orientacion, beta, ktemp, PST, cvptm, albedo, area, cant,estacion):
@@ -30,7 +31,7 @@ class Genefov:
         self.cant = cant
         self.df = pd.DataFrame()
         self.estacion = estacion
-        self.df2 = pd.read_csv(f"{self.estacion}.csv", header=2) #separado por coma
+        self.df2 = pd.read_csv(self.resource_path(f"sitios/{self.estacion}.csv"), header=2) #separado por coma
         self.df["Y"] = self.df2["Year"]
         self.df["M"] = self.df2["Month"]
         self.df["D"] = self.df2["Day"]
@@ -67,6 +68,15 @@ class Genefov:
         self.clausura = self.clausuratotal(self.df["GHI"], self.df["DNI"], self.df["DHI"],self.df["Temp"],self.df["CSTita"])
         self.dias, self.diaria, total = self.diaria3
         self.Iestacional = self.estacional(self.dias, self.diaria,self.cant)
+    def resource_path(self, relative_path):
+        """Obtiene la ruta absoluta, manejando el entorno PyInstaller si es necesario."""
+        try:
+            # Cuando se empaqueta con PyInstaller, los archivos se extraen en una carpeta temporal
+            base_path = sys._MEIPASS
+        except AttributeError:
+            # Si no está empaquetado, usar la ruta normal
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
 
     #Calculo de CSZ
     
