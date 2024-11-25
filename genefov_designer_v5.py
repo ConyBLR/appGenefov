@@ -425,7 +425,7 @@ class Ui_MainWindow(object):
                 self.label_9.setText(_translate("MainWindow", "[ W ]"))
                 self.label_10.setText(_translate("MainWindow", "Coef. Δpot/T"))
                 self.lineEdit_5.setText(_translate("MainWindow", "-0.36"))
-                self.label_11.setText(_translate("MainWindow", "[%/°C]"))
+                self.label_11.setText(_translate("MainWindow", "[ %/°C ]"))
                 self.label_16.setText(_translate("MainWindow", "Area Panel"))
                 self.lineEdit_8.setText(_translate("MainWindow", "2.21"))
                 self.label_17.setText(_translate("MainWindow", "[ m2 ]"))
