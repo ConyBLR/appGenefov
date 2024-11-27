@@ -571,9 +571,6 @@ class Ui_MainWindow(object):
                 ax.set_ylabel('Generación (kWh)')
                 ax.grid()
 
-                # Ajustar el tamaño del cuadro de las leyendas
-                #ax.legend(loc='upper right', fontsize='small', frameon=True, framealpha=0.5)
-
                 self.canvas.draw()
 
 
