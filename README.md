@@ -1,4 +1,4 @@
-## GENEFOV ##
+# GENEFOV #
 ##
 Esta es una herramienta pensada para la estimacion del potencial fotovoltaico para 
 tres sitios en en noroeste argentino.
@@ -11,7 +11,7 @@ tres sitios en en noroeste argentino.
 ## Licencia de uso ##
 Se distribuye bajo la licencia MIT 
 
-# Documentacion##
+## Documentacion ##
 
 ## Contribuciones ##
 Para contribuir al codigo contactarse 
