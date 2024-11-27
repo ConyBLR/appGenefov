@@ -463,8 +463,8 @@ class Ui_MainWindow(object):
                 self.sitio_seleccionado = self.comboBox_Sitios.currentText()
                 print(f"sitio: {self.sitio_seleccionado}")
                 valores_por_sitio = {
-                        'Salta': {'latitud': -24, 'longitud': -65, 'altura': 1233, 'gtm': 0},
-                        'ElRosal60': {'latitud': -30, 'longitud': -70, 'altura': 1500, 'gtm': 0},
+                        'Salta': {'latitud': -24.7289, 'longitud': -65.4098, 'altura': 1233, 'gtm': 0},
+                        'ElRosal60': {'latitud': -24.3928, 'longitud': -65.7683, 'altura': 3348, 'gtm': 0},
                         'yu': {'latitud': -20, 'longitud': -60, 'altura': 1100, 'gtm': 0},
                 }
                 
