@@ -10,7 +10,6 @@ import math
 import pandas as pd
 import numpy as np
 import pylab as plt
-import sys, os
 class Genefov:
     
     def __init__(self, lat, lon, alt, gmt, orientacion, beta, ktemp, PST, cvptm, albedo, area, cant,estacion):
@@ -31,7 +30,7 @@ class Genefov:
         self.cant = cant
         self.df = pd.DataFrame()
         self.estacion = estacion
-        self.df2 = pd.read_csv(self.resource_path(f"sitios/{self.estacion}.csv"), header=2) #separado por coma
+        self.df2 = pd.read_csv(f"{self.estacion}.csv", header=2) #separado por coma
         self.df["Y"] = self.df2["Year"]
         self.df["M"] = self.df2["Month"]
         self.df["D"] = self.df2["Day"]
@@ -67,16 +66,7 @@ class Genefov:
         self.diaria3 = self.diaria(np.array(self.df["Tpanel"]),self.cant)
         self.clausura = self.clausuratotal(self.df["GHI"], self.df["DNI"], self.df["DHI"],self.df["Temp"],self.df["CSTita"])
         self.dias, self.diaria, total = self.diaria3
-        self.Iestacional = self.estacional(self.dias, self.diaria,self.cant)
-    def resource_path(self, relative_path):
-        """Obtiene la ruta absoluta, manejando el entorno PyInstaller si es necesario."""
-        try:
-            # Cuando se empaqueta con PyInstaller, los archivos se extraen en una carpeta temporal
-            base_path = sys._MEIPASS
-        except AttributeError:
-            # Si no está empaquetado, usar la ruta normal
-            base_path = os.path.abspath(".")
-        return os.path.join(base_path, relative_path)
+        self.Iestacional = self.estacional(self.dias, self.diaria)
 
     #Calculo de CSZ
     
@@ -184,10 +174,9 @@ class Genefov:
         dias = np.linspace(1,365,365)
   
         total = cant*vec_suma.sum()/1000
-        
-
-        
-        return dias, cant*vec_suma/1000, total    
+               
+        return dias, cant*vec_suma/1000, total
+    
     def grafica(self, horario, dias):
         return plt.plot(dias, horario)
     
@@ -209,9 +198,9 @@ class Genefov:
         Temprom = temp.mean()     
         return GHItotal/1000, DNItotal/1000, DNIhorizon/1000, DHItotal/1000, Temprom
     
-    def estacional(self,dias,total,cant):
+    def estacional(self,dias,total):
         total = np.array(total)
-        cant = cant
+        #cant = cant
         dias = np.array(dias)
         df = pd.DataFrame({"dias":dias,"ghi":total})
         dias = df.dias
@@ -225,7 +214,7 @@ class Genefov:
         invierno = ghi[mask2]
         primavera = ghi[mask3]
         verano = ghi[mask4 | mask5]
-        return cant*otono.sum(), cant*invierno.sum(), cant*primavera.sum(), cant*verano.sum()
+        return otono.sum(), invierno.sum(), primavera.sum(), verano.sum()
 
         
         
