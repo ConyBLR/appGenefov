@@ -1,7 +1,7 @@
 # GENEFOV #
 ##
 Esta es una herramienta pensada para la estimacion del potencial fotovoltaico para 
-tres sitios en en noroeste argentino.
+tres sitios en el Noroeste argentino.
 ##
 
 
@@ -19,7 +19,7 @@ Para contribuir al codigo contactarse
 ## Contacto ##
 
 ## Creditos ##
-Este programa fue desarrollado por la Lic. Constanza Lopez Ruiz y el Lic. Niocolas Rivera
+Este programa fue desarrollado por la Lic. Constanza Lopez Ruiz y el Lic. Nicolas Rivera
 bajo supervision del Dr. German Salazar en el marco de las actividades de investigacion desarrolladas
 por el Grupo Estudio y Evaluacion del Recurso Solar - INENCO - CONICET - UNSa
 ## 
