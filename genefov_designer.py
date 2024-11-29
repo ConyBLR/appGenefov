@@ -459,6 +459,9 @@ class Ui_MainWindow(object):
                 self.pushButton_exportar.setText(_translate("MainWindow", "Exportar"))
                 self.label_footer.setText(_translate("MainWindow", "Grupo de Estudio y Evaluacion del Recurso Solar - INENCO (UNSA-CONICET)"))            
 
+
+
+
         def calcular_generacion(self):
                 self.sitio_seleccionado = self.comboBox_Sitios.currentText()
                 print(f"sitio: {self.sitio_seleccionado}")
@@ -553,29 +556,27 @@ class Ui_MainWindow(object):
                 # Limpiar el canvas antes de graficar
                 self.figure.clear()
                 ax = self.canvas.figure.add_subplot(111)
-                ax.plot(dias, vec_suma, label='Generación diaria')
+                ax.plot(dias, vec_suma, c='k')
 
                 # Agregar áreas sombreadas para las estaciones y texto
 
                 for inicio, fin, estacion, color in estaciones_límites: 
                         if inicio < fin: 
                                 ax.axvspan(inicio, fin, color=color, alpha=0.3, label=estacion) 
-                                ax.text((inicio + fin) / 2, max(vec_suma) * 1, estacion, ha='center', va='center') 
+                                ax.text((inicio + fin) / 2, max(vec_suma) * 1.08, estacion, ha='center', va='center') 
                         else: 
                                 ax.axvspan(inicio, 365, color=color, alpha=0.3, label=estacion) 
                                 ax.axvspan(0, fin, color=color, alpha=0.3, label=estacion) 
-                                if estacion == 'Verano': ax.text((0 + fin) / 2, max(vec_suma) * 1, estacion, ha='center', va='center')
+                                if estacion == 'Verano': ax.text((0 + fin) / 2, max(vec_suma) * 1.08, estacion, ha='center', va='center')
 
-                ax.set_title('Generación Fotovoltaica')
-                ax.set_xlabel('Días')
-                ax.set_ylabel('Generación (kWh)')
+                ax.set_title('Generación Fotovoltaica', y=1.105, fontsize=16, fontweight='bold')
+                ax.set_xlabel('Días', fontsize=12)
+                ax.xaxis.set_label_coords(0.5, -0.15)
+                ax.set_ylabel('Generación (kWh)', fontsize=12)
+                ax.yaxis.set_label_coords(-0.08, 0.5)
                 ax.grid()
-
+                self.figure.tight_layout()
                 self.canvas.draw()
-
-
-
-
         
         def exportar_resultados(self):
                 # Verificar si los arrays están vacíos
@@ -627,9 +628,6 @@ class Ui_MainWindow(object):
                 df.to_csv(filename, mode='a', index=False)
                 # Mostrar un mensaje de éxito
                 QMessageBox.information(self.centralwidget, "Exportación exitosa", f"Los resultados han sido exportados a: {filename}")
-
-
-
 
 
 
